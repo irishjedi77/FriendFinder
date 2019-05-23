@@ -1,3 +1,5 @@
+//Dependencies
+
 var path = require('path');
 
 var friendsData = require("../data/friends");
