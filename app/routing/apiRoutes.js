@@ -1,34 +1,44 @@
+var path = require('path');
+
 var friendsData = require("../data/friends");
 
 
-module.exports = function(app) {
+module.exports = function (app) {
     // API GET Requests
-  
-    app.get("/api/friends", function(req, res) {
-      res.json(friendsData);
+
+    app.get("/api/friends", function (req, res) {
+        res.json(friendsData);
     });
-  
-   
-  
+
     // API POST Requests
-  
-    app.post("/api/friends", function(req, res) {
-      if (friendsData.length < 5) {
+
+    app.post("/api/friends", function (req, res) {
+        console.log(req.body.scores);
+
+        var user = req.body;
+        for (var i = 0; i < user.scores.length; i++) {
+            user.scores[i] = parseInt(user.scores[i]);
+        }
+
+        var bestFriendIndex = 0;
+        var minimumDifference = 40;
+
+        for (var i = 0; i < friendsData.length; i++) {
+            var totalDifference = 0;
+            for (var j = 0; j < friendsData[i].scores.length; j++) {
+                var difference = Math.abs(user.scores[j] - friendsData[i].scores[j]);
+                totalDifference += difference;
+            }
+            if (totalDifference < minimumDifference) {
+                bestFriendIndex = i;
+                minimumDifference = totalDifference;
+            }
+        }
+
         friendsData.push(req.body);
-        res.json(true);
-      }
-      
+
+        res.json(friendsData[bestFriendIndex]);
+
     });
-  
-    // ---------------------------------------------------------------------------
-    // I added this below code so you could clear out the table while working with the functionality.
-    // Don"t worry about it!
-  
-    app.post("/api/clear", function(req, res) {
-      // Empty out the arrays of data
-      friendsData.length = 0;
-  
-      res.json({ ok: true });
-    });
-  };
-  
+
+};

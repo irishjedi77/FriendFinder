@@ -1,8 +1,6 @@
 var express = require("express");
-var path = require("path");
+// var path = require("path");
 
-var apiRoutes = require("./app/routing/apiRoutes");
-var htmlRoutes = require("./app/routing/htmlRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -13,9 +11,9 @@ app.use(express.json());
 
 // Routes //
 
-app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "./app/public/home"));
-  });
+// app.get("/public", function(req, res) {
+//     res.sendFile(path.join(__dirname, "home.html"));
+//   });
 
 // app.get("/survey", function(req, res) {
 //     res.sendFile(path.join(__dirname, "survey.html"));
@@ -41,7 +39,7 @@ app.get("/", function(req, res) {
 //     return res.json(false);
 //   });
 
-  apiRoutes(app);
-  htmlRoutes(app);
+  require("./app/routing/apiRoutes")(app);
+  require("./app/routing/htmlRoutes")(app);
 
 app.listen(PORT, () => console.log(`App listening on ${PORT}`));
